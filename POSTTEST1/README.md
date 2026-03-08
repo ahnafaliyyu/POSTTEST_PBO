@@ -15,9 +15,11 @@ Program ini memiliki menu interaktif yang berjalan terus-menerus hingga pengguna
 ## 📸 Screenshot Output Program
 
 Berikut adalah tampilan antarmuka konsol untuk setiap fitur yang dijalankan:
+### Menu Awal
+![Output Menu Awal](assets/menu.png)
 
-### 1. Menu Utama & Tambah Data (Create)
-![Output Tambah Data](assets/menu.png)(assets/tambah.png)
+### 1.Tambah Data (Create)
+![Output Tambah Data](assets/tambah.png)
 
 ### 2. Tampilkan Data (Read)
 ![Output Tampil Data](assets/read.png)
