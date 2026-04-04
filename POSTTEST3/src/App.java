@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-
 class Sembako {
     private String kodeBarang;
     private String namaBarang;
@@ -20,6 +19,7 @@ class Sembako {
                          " | Stok: " + jumlahStok + " | Harga: Rp" + hargaSatuan);
     }
 
+    // Getter & Setter
     public String getKodeBarang() { return kodeBarang; }
     public String getNamaBarang() { return namaBarang; }
     public int getJumlahStok() { return jumlahStok; }
@@ -38,6 +38,9 @@ class SembakoCair extends Sembako {
         this.volumeLiter = volume;
     }
 
+    public double getVolumeLiter() { return volumeLiter; }
+    public void setVolumeLiter(double volumeLiter) { this.volumeLiter = volumeLiter; }
+
     @Override
     public void tampilkanInfo() {
         super.tampilkanInfo();
@@ -45,7 +48,6 @@ class SembakoCair extends Sembako {
     }
 }
 
-// --- SUBCLASS 2 (Inheritance: Single Inheritance) ---
 class SembakoPadat extends Sembako {
     private double beratKg;
 
@@ -53,6 +55,9 @@ class SembakoPadat extends Sembako {
         super(kode, nama, stok, harga);
         this.beratKg = berat;
     }
+
+    public double getBeratKg() { return beratKg; }
+    public void setBeratKg(double beratKg) { this.beratKg = beratKg; }
 
     @Override
     public void tampilkanInfo() {
@@ -68,12 +73,13 @@ public class App {
     public static void main(String[] args) {
         boolean berjalan = true;
         while (berjalan) {
-            System.out.println("\n--- SISTEM MANAJEMEN GUDANG SEMBAKO (INHERITANCE) ---");
+            System.out.println("\n--- SISTEM MANAJEMEN GUDANG SEMBAKO ---");
             System.out.println("1. Tambah Barang Cair");
             System.out.println("2. Tambah Barang Padat");
             System.out.println("3. Tampilkan Semua Barang");
-            System.out.println("4. Hapus Data");
-            System.out.println("5. Keluar");
+            System.out.println("4. Ubah Data Barang (Edit)");
+            System.out.println("5. Hapus Data");
+            System.out.println("6. Keluar");
             System.out.print("Pilih menu: ");
             
             int pilihan = scanner.nextInt();
@@ -83,8 +89,9 @@ public class App {
                 case 1: tambahBarang(true); break;
                 case 2: tambahBarang(false); break;
                 case 3: tampilkanData(); break;
-                case 4: hapusData(); break;
-                case 5: 
+                case 4: ubahData(); break;
+                case 5: hapusData(); break;
+                case 6: 
                     berjalan = false;
                     System.out.println("Program Selesai.");
                     break;
@@ -111,21 +118,62 @@ public class App {
 
     static void tampilkanData() {
         System.out.println("\n-- DAFTAR BARANG GUDANG --");
-        if (daftarSembako.isEmpty()) System.out.println("Gudang Kosong.");
-        for (int i = 0; i < daftarSembako.size(); i++) {
-            System.out.print((i + 1) + ". ");
-            daftarSembako.get(i).tampilkanInfo(); // Polimorfisme bekerja di sini
+        if (daftarSembako.isEmpty()) {
+            System.out.println("Gudang Kosong.");
+        } else {
+            for (int i = 0; i < daftarSembako.size(); i++) {
+                System.out.print((i + 1) + ". ");
+                daftarSembako.get(i).tampilkanInfo();
+            }
+        }
+    }
+
+    static void ubahData() {
+        tampilkanData();
+        if (daftarSembako.isEmpty()) return;
+
+        System.out.print("\nPilih nomor barang yang ingin diubah: ");
+        int no = scanner.nextInt();
+        scanner.nextLine();
+
+        if (no > 0 && no <= daftarSembako.size()) {
+            Sembako barang = daftarSembako.get(no - 1);
+            
+            System.out.print("Nama Baru (" + barang.getNamaBarang() + "): ");
+            String namaBaru = scanner.nextLine();
+            if(!namaBaru.isEmpty()) barang.setNamaBarang(namaBaru);
+
+            System.out.print("Stok Baru (" + barang.getJumlahStok() + "): ");
+            barang.setJumlahStok(scanner.nextInt());
+
+            System.out.print("Harga Baru (" + barang.getHargaSatuan() + "): ");
+            barang.setHargaSatuan(scanner.nextDouble());
+            
+            // Logika spesifik menggunakan instanceof (Cek tipe Subclass)
+            if (barang instanceof SembakoCair) {
+                SembakoCair bc = (SembakoCair) barang;
+                System.out.print("Volume Baru (" + bc.getVolumeLiter() + " L): ");
+                bc.setVolumeLiter(scanner.nextDouble());
+            } else if (barang instanceof SembakoPadat) {
+                SembakoPadat bp = (SembakoPadat) barang;
+                System.out.print("Berat Baru (" + bp.getBeratKg() + " Kg): ");
+                bp.setBeratKg(scanner.nextDouble());
+            }
+
+            System.out.println("Data berhasil diperbarui!");
+        } else {
+            System.out.println("Nomor tidak valid.");
         }
     }
 
     static void hapusData() {
         tampilkanData();
         if (!daftarSembako.isEmpty()) {
-            System.out.print("Nomor yang dihapus: ");
+            System.out.print("\nNomor yang dihapus: ");
             int no = scanner.nextInt();
             if (no > 0 && no <= daftarSembako.size()) {
                 daftarSembako.remove(no - 1);
-                System.out.println("Terhapus.");
+                System.out.println("Data berhasil dihapus.");
             }
         }
     }
